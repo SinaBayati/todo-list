@@ -24,8 +24,19 @@ function removeProject(DATA,projectTitle){
   return DATA;
 }
 
+function updateProject(newProjectTitle,newProjectDescription,newTodos,DATA,oldProjectTitle){
+  const newProject = createProject(
+    newProjectTitle,
+    newProjectDescription,
+    newTodos
+  );
+  const newDATA = removeProject(DATA,oldProjectTitle);
+  return addProject(newDATA,newProject);
+}
+
 export { 
   createProject,
   addProject,
   removeProject,
+  updateProject,
 }
