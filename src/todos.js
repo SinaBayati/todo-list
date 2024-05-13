@@ -36,8 +36,36 @@ function removeTodo(DATA,projectTitle,todoTitle){
   return DATA;
 }
 
+function updateTodo(
+  newTodoTitle,
+  newTodoDescription,
+  newTodoIsFinished,
+  newTodoDuDate,
+  newTodoPriority,
+  DATA,
+  projectTitle,
+  oldTodoTitle
+){
+  const newTodo = createTodo(
+    newTodoTitle,
+    newTodoDescription,
+    newTodoIsFinished,
+    newTodoDuDate,
+    newTodoPriority
+  );
+
+  const newDATA = removeTodo(
+    DATA,
+    projectTitle,
+    oldTodoTitle
+  );
+
+  return addTodo(newDATA,projectTitle,newTodo); 
+}
+
 export {
   createTodo,
   addTodo,
-  removeTodo
+  removeTodo,
+  updateTodo
 }
