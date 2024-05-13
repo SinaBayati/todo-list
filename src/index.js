@@ -11,5 +11,12 @@ import {
   updateTodo
 } from './barrel.js';
 
+function setDATA(DATA){
+  localStorage.setItem("DATA",JSON.stringify(DATA));
+}
+
+function getDATA(){
+  return JSON.parse(localStorage.getItem("DATA"));
+}
+
 let DATA = createInitialDATA();
-localStorage.setItem("DATA",JSON.stringify(DATA));
