@@ -1,3 +1,5 @@
+@import url(../node_modules/bootstrap-icons/font/bootstrap-icons.min.css);
+
 *,*::before,*::after{
   box-sizing: border-box;
   margin: 0;
@@ -72,7 +74,6 @@ nav button{
 
 nav button.active{
   background-color: #313544;
-  font-size: 2rem;
 }
 
 #display{
@@ -99,4 +100,23 @@ nav button.active{
   margin-top: 1rem;
   color: var(--white);
   font-size: 1.5rem;
+}
+
+.btn{
+  background-color: var(--secondary);
+  color: var(--white);
+  border: var(--border-size) dashed var(--black);
+  padding: 1rem;
+  margin: 0 1rem;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.btn:hover,
+.btn:active{
+  background-color: var(--primary);
+}
+
+.project-btn{
+  border: var(--border-size) solid var(--black);
 }
