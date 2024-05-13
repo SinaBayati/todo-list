@@ -13,5 +13,6 @@ export {
   createTodo,
   addTodo,
   removeTodo,
-  updateTodo
+  updateTodo,
+  getTodayTodos
 } from "./todos.js";

@@ -8,7 +8,8 @@ import {
   createTodo,
   addTodo,
   removeTodo,
-  updateTodo
+  updateTodo,
+  getTodayTodos
 } from './barrel.js';
 
 function setDATA(DATA){

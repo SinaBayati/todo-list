@@ -66,9 +66,27 @@ function updateTodo(
   return addTodo(newDATA,projectTitle,newTodo); 
 }
 
+function getTodayTodos(DATA,date){
+  const endOfTheRequiredString = 10;
+  const formattedDueDate = 
+    date.toISOString().slice(0,endOfTheRequiredString);
+
+  const todayTodos = [];
+  DATA.projects.forEach(project => {
+    project.todos.forEach(todo => {
+      if(todo.dueDate == formattedDueDate){
+        todayTodos.push(todo);
+      }
+    });
+  });
+
+  return todayTodos;
+}
+
 export {
   createTodo,
   addTodo,
   removeTodo,
-  updateTodo
+  updateTodo,
+  getTodayTodos
 }
