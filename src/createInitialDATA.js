@@ -1,4 +1,4 @@
-export default function createInitialDATA(){
+export function createInitialDATA(){
   const DATA = {
     projects: [
       {

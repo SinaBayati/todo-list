@@ -1,8 +1,15 @@
 import './styles.css';
-import createInitialDATA from './createInitialDATA.js';
-import { createTodo, addTodo, removeTodo, updateTodo } from './todos.js';
-import { createProject, addProject, removeProject, updateProject } from './projects.js';
+import {
+  createInitialDATA,
+  createProject,
+  addProject,
+  removeProject,
+  updateProject,
+  createTodo,
+  addTodo,
+  removeTodo,
+  updateTodo
+} from './barrel.js';
 
-const DATA = createInitialDATA();
+let DATA = createInitialDATA();
 localStorage.setItem("DATA",JSON.stringify(DATA));
-

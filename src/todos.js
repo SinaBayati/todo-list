@@ -5,11 +5,14 @@ function createTodo(
   dueDate = new Date(),
   priority = 3
 ){
+  const endOfTheRequiredString = 10;
+  const formattedDueDate = 
+    dueDate.toISOString().slice(0,endOfTheRequiredString);
   return {
     title,
     description,
     isFinished,
-    dueDate,
+    formattedDueDate,
     priority,
   };
 }
