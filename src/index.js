@@ -21,6 +21,7 @@ function getDATA(){
 }
 
 let DATA = createInitialDATA();
+setDATA(DATA);
 
 const projectsBtn = document.querySelector("#projects-btn");
 const addProjectBtn = document.querySelector("#projects-add-btn");
@@ -48,6 +49,10 @@ function addActiveClass(event){
 }
 
 function createProjectElement(projectObject){
+  const projectContainer = document.createElement("div");
+  projectContainer.className = "project";
+  projectContainer.dataset.projectTitle = projectObject.title;
+
   const buttonsContainer = document.createElement("div");
   
   const addBtn = document.createElement("button");
@@ -68,9 +73,6 @@ function createProjectElement(projectObject){
   buttonsContainer.append(addBtn,editBtn,removeBtn);
   buttonsContainer.style.cssText = 
     "display: flex; justify-content: flex-end;";
-
-  const projectContainer = document.createElement("div");
-  projectContainer.className = "project";
 
   const projectTitleEl = document.createElement("h2");
   projectTitleEl.textContent = projectObject.title;
@@ -140,6 +142,7 @@ function createTodoElement(todoObject){
   removeBtn.onclick = removeTodoHandler;
 
   const changeStatusBtn = document.createElement("button");
+  changeStatusBtn.dataset.todoTitle = todoObject.title;
   changeStatusBtn.className = "btn";
   changeStatusBtn.innerHTML = '<i class="bi bi-check-lg"></i>';
   changeStatusBtn.onclick = changeStatusHandler;
@@ -162,12 +165,7 @@ function renderAllProjects(e){
   removeActiveClasses(e);
   addActiveClass(e);
   display.innerHTML = "";
-
-  const DATA = getDATA();
-  DATA.projects.forEach(project => {
-    const projectEl = createProjectElement(project);
-    display.appendChild(projectEl);
-  });
+  renderAll(getDATA());
 }
 
 function renderTodayTodos(e){
@@ -194,6 +192,14 @@ function renderAddProject(e){
   display.innerHTML = "";
 }
 
+function renderAll(DATA){
+  display.innerHTML = "";
+  DATA.projects.forEach(project => {
+    const projectEl = createProjectElement(project);
+    display.appendChild(projectEl);
+  });
+}
+
 function removeTodoHandler(){
   console.log("removed todo");
 }
@@ -202,8 +208,22 @@ function editTodoHandler(){
   console.log("edited todo");
 }
 
-function changeStatusHandler(){
-  console.log("status changed");
+function changeStatusHandler(e){
+  const DATA = getDATA();
+  const projectTitle = 
+    e.target
+    .parentElement
+    .parentElement
+    .parentElement
+    .parentElement
+    .parentElement
+    .dataset.projectTitle;
+  const todoTitle = 
+    e.target.parentElement.dataset.todoTitle;
+  const targetTodo = getTodo(DATA,todoTitle);
+  const newDATA = updateTodo(targetTodo.title,targetTodo.description,!(targetTodo.isFinished),"2024-05-12",targetTodo.priority,DATA,projectTitle,targetTodo.title);
+  setDATA(newDATA);
+  renderAll(getDATA());
 }
 
 function editProjectHandler(){
@@ -216,4 +236,16 @@ function removeProjectHandler(){
 
 function addTodoToProjectHandler(){
   console.log("added a todo to project");
+}
+
+function getTodo(DATA,todoTitle){
+  let targetTodo = null;
+  DATA.projects.forEach(project => {
+    project.todos.forEach(todo => {
+      if(todo.title == todoTitle){
+        targetTodo = todo;
+      }
+    });
+  });
+  return targetTodo;
 }

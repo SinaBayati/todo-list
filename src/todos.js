@@ -5,14 +5,11 @@ function createTodo(
   dueDate = new Date(),
   priority = 3
 ){
-  const endOfTheRequiredString = 10;
-  const formattedDueDate = 
-    dueDate.toISOString().slice(0,endOfTheRequiredString);
   return {
     title,
     description,
     isFinished,
-    formattedDueDate,
+    dueDate,
     priority,
   };
 }
@@ -67,14 +64,10 @@ function updateTodo(
 }
 
 function getTodayTodos(DATA,date){
-  const endOfTheRequiredString = 10;
-  const formattedDueDate = 
-    date.toISOString().slice(0,endOfTheRequiredString);
-
   const todayTodos = [];
   DATA.projects.forEach(project => {
     project.todos.forEach(todo => {
-      if(todo.dueDate == formattedDueDate){
+      if(todo.dueDate == date){
         todayTodos.push(todo);
       }
     });
