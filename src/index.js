@@ -56,6 +56,7 @@ projectsBtn.addEventListener("click",allProjectsHandler);
 addProjectBtn.addEventListener("click",addProjectHandler);
 
 let currentProjectTitle = "Default project title";
+let currentTodoTitle = "Default todo title";
 
 // menu handlers
 
@@ -101,8 +102,8 @@ function changeTodoStatusHandler(event){
 
 function addTodoToProjectHandler(e){
   currentProjectTitle = e.currentTarget.dataset.projectTitle;
-  renderModal(createTodoModal(todoSubmitHandler),overlay);
-  setSubmitListener(todoSubmitHandler);  
+  renderModal(createTodoModal(),overlay);
+  setSubmitListener(todoAddSubmitHandler);  
 }
 
 function setSubmitListener(todoSubmitHandler){
@@ -110,7 +111,7 @@ function setSubmitListener(todoSubmitHandler){
   todoSubmitBtn.addEventListener("click",todoSubmitHandler);
 }
 
-function todoSubmitHandler(e){
+function todoAddSubmitHandler(e){
   const newTodoTitle = e.target.parentElement
     .querySelector("#todo-title").value;
   
@@ -136,6 +137,26 @@ function removeProjectHandler(e){
   renderProjects(getDATA().projects,display);
 }
 
+function editTodoHandler(e){
+  currentTodoTitle = e.currentTarget.dataset.todoTitle;
+  currentProjectTitle = e.currentTarget.dataset.projectTitle;
+  renderModal(createTodoModal(),overlay);
+  setSubmitListener(todoEditSubmitHandler);  
+}
+
+function todoEditSubmitHandler(e){
+  const oldTodo = getTodo(getDATA(),currentProjectTitle,currentTodoTitle);
+  const newTodoTitle = e.currentTarget.parentElement.querySelector("#todo-title").value || oldTodo.title;
+  const newTodoDescription = e.currentTarget.parentElement.querySelector("#todo-description").value || oldTodo.description;
+  const newTodoPriority = Number(e.currentTarget.parentElement.querySelector("#todo-priority").value) || oldTodo.priority;
+  const newTodoDueDate = e.currentTarget.parentElement.querySelector("#todo-due-date").value || oldTodo.dueDate;
+
+  const newDATA = updateTodo(newTodoTitle,newTodoDescription,oldTodo.isFinished,newTodoDueDate,newTodoPriority,getDATA(),currentProjectTitle,oldTodo.title);
+  setDATA(newDATA);
+  overlay.classList.remove("active");
+  renderProjects(newDATA.projects,display);
+}
+
 // render functions
 
 function renderProjects(projects,target){
@@ -147,7 +168,7 @@ function renderProjects(projects,target){
         addTodoToProjectHandler,
         removeProjectHandler,
         changeTodoStatusHandler,
-        ()=>console.log("Edit todo"),
+        editTodoHandler,
         ()=>console.log("Remove a todo")
       )
     );
