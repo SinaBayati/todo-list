@@ -51,6 +51,7 @@ const projectsBtn = document.querySelector("#projects-btn");
 const addProjectBtn = document.querySelector("#projects-add-btn");
 const todayTodosBtn = document.querySelector("#today-todos");
 const display = document.querySelector("#display");
+const overlay = document.querySelector("#overlay");
 
 projectsBtn.addEventListener("click",allProjectsHandler);
 addProjectBtn.addEventListener("click",addProjectHandler);
@@ -88,7 +89,39 @@ function changeTodoStatusHandler(event){
   renderProjects(getDATA().projects,display);
 }
 
-// render all projects
+let currentProjectTitle = "Default project title";
+
+function addTodoToProject(e){
+  currentProjectTitle = e.currentTarget.dataset.projectTitle;
+  renderModal(createTodoModal(todoSubmitHandler),overlay);
+  setSubmitListener(todoSubmitHandler);  
+}
+
+function setSubmitListener(todoSubmitHandler){
+  const todoSubmitBtn = document.querySelector("#todo-submit");
+  todoSubmitBtn.addEventListener("click",todoSubmitHandler);
+}
+
+function todoSubmitHandler(e){
+  const newTodoTitle = e.target.parentElement
+    .querySelector("#todo-title").value;
+  
+  const newTodoDescription = e.target.parentElement
+  .querySelector("#todo-description").value;
+
+  const newTodoPriority = e.target.parentElement
+  .querySelector("#todo-priority").value;
+
+  const newTodoDueDate = e.target.parentElement
+  .querySelector("#todo-due-date").value;
+
+  let newDATA = addTodo(getDATA(),currentProjectTitle,createTodo(newTodoTitle,newTodoDescription,false,newTodoDueDate,newTodoPriority));
+  setDATA(newDATA);
+  overlay.classList.remove("active");
+  renderProjects(newDATA.projects,display);
+}
+
+// render functions
 
 function renderProjects(projects,target){
   target.innerHTML = "";
@@ -96,7 +129,7 @@ function renderProjects(projects,target){
     target.appendChild(
       createProjectElement(
         project,
-        ()=>console.log("add a project"),
+        addTodoToProject,
         ()=>console.log("Edit a project"),
         ()=>console.log("Remove a project"),
         changeTodoStatusHandler,
@@ -105,4 +138,9 @@ function renderProjects(projects,target){
       )
     );
   });
+}
+
+function renderModal(modal,overlay){
+  overlay.appendChild(modal);
+  overlay.classList.add("active");
 }

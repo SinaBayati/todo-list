@@ -155,7 +155,7 @@ function setActiveTab(event){
   event.target.classList.add("active");
 }
 
-function createTodoModal(){
+function createTodoModal(submitHandler){
   const todoModal = document.createElement("div");
   todoModal.id = "todo-modal";
 
