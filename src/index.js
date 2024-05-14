@@ -157,6 +157,15 @@ function todoEditSubmitHandler(e){
   renderProjects(newDATA.projects,display);
 }
 
+function removeTodoHandler(e){
+  currentTodoTitle = e.currentTarget.dataset.todoTitle;
+  currentProjectTitle = e.currentTarget.dataset.projectTitle;
+
+  const newDATA = removeTodo(getDATA(),currentProjectTitle,currentTodoTitle);
+  setDATA(newDATA);
+  renderProjects(newDATA.projects,display);
+}
+
 // render functions
 
 function renderProjects(projects,target){
@@ -169,7 +178,7 @@ function renderProjects(projects,target){
         removeProjectHandler,
         changeTodoStatusHandler,
         editTodoHandler,
-        ()=>console.log("Remove a todo")
+        removeTodoHandler
       )
     );
   });
