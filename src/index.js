@@ -57,6 +57,8 @@ projectsBtn.addEventListener("click",allProjectsHandler);
 addProjectBtn.addEventListener("click",addProjectHandler);
 todayTodosBtn.addEventListener("click",todoyTodosHandler);
 
+let currentProjectTitle = "Default project title";
+
 // menu handlers
 
 function allProjectsHandler(e){
@@ -89,9 +91,7 @@ function changeTodoStatusHandler(event){
   renderProjects(getDATA().projects,display);
 }
 
-let currentProjectTitle = "Default project title";
-
-function addTodoToProject(e){
+function addTodoToProjectHandler(e){
   currentProjectTitle = e.currentTarget.dataset.projectTitle;
   renderModal(createTodoModal(todoSubmitHandler),overlay);
   setSubmitListener(todoSubmitHandler);  
@@ -121,6 +121,13 @@ function todoSubmitHandler(e){
   renderProjects(newDATA.projects,display);
 }
 
+function removeProjectHandler(e){
+  currentProjectTitle = e.currentTarget.dataset.projectTitle;
+  const newDATA = removeProject(getDATA(),currentProjectTitle);
+  setDATA(newDATA);
+  renderProjects(getDATA().projects,display);
+}
+
 // render functions
 
 function renderProjects(projects,target){
@@ -129,9 +136,9 @@ function renderProjects(projects,target){
     target.appendChild(
       createProjectElement(
         project,
-        addTodoToProject,
+        addTodoToProjectHandler,
         ()=>console.log("Edit a project"),
-        ()=>console.log("Remove a project"),
+        removeProjectHandler,
         changeTodoStatusHandler,
         ()=>console.log("Edit todo"),
         ()=>console.log("Remove a todo")
