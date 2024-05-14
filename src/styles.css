@@ -122,10 +122,10 @@ nav button.active{
   background-color: var(--primary);
 }
 
-.project-btn{
+.btn-project{
   border: var(--border-size) solid var(--black);
 }
 
-.project-btn i{
+.btn-project i{
   border: none;
 }

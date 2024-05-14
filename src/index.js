@@ -1,16 +1,33 @@
 import './styles.css';
+
 import {
-  createInitialDATA,
+  createInitialDATA
+} from "./createInitialDATA.js";
+
+import {
   createProject,
   addProject,
   removeProject,
-  updateProject,
+  updateProject
+} from "./projects.js";
+
+import {
   createTodo,
   addTodo,
   removeTodo,
   updateTodo,
-  getTodayTodos
-} from './barrel.js';
+  getAllTodos,
+  getTargetDateTodos,
+  changeTodoStatus,
+  getTodo
+} from "./todos.js";
+
+import {
+  removeActiveClasses,
+  createProjectElement,
+  createTodoElement,
+  setActiveTab,
+} from "./DOM.js";
 
 function setDATA(DATA){
   localStorage.setItem("DATA",JSON.stringify(DATA));
@@ -20,232 +37,70 @@ function getDATA(){
   return JSON.parse(localStorage.getItem("DATA"));
 }
 
-let DATA = createInitialDATA();
-setDATA(DATA);
+function setInitialData(){
+  if(!getDATA()){
+    setDATA(createInitialDATA());
+  }
+}
+
+setInitialData();
 
 const projectsBtn = document.querySelector("#projects-btn");
 const addProjectBtn = document.querySelector("#projects-add-btn");
-const todayBtn = document.querySelector("#today-btn");
-const weekBtn = document.querySelector("#week-btn");
-const monthBtn = document.querySelector("#month-btn");
+const todayTodosBtn = document.querySelector("#today-todos");
 const display = document.querySelector("#display");
 
-projectsBtn.addEventListener("click",renderAllProjects);
-addProjectBtn.addEventListener("click",renderAddProject);
-todayBtn.addEventListener("click",renderTodayTodos);
-weekBtn.addEventListener("click",renderWeekTodos);
-monthBtn.addEventListener("click",renderMonthTodos);
+projectsBtn.addEventListener("click",allProjectsHandler);
+addProjectBtn.addEventListener("click",addProjectHandler);
+todayTodosBtn.addEventListener("click",todoyTodosHandler);
 
-function removeActiveClasses(event){
-  const elements = 
-    event.target.parentElement.querySelectorAll("button");
-  elements.forEach(element => {
-    element.className = "";
-  });
-}
+// menu handlers
 
-function addActiveClass(event){
-  event.target.className = "active";
-}
-
-function createProjectElement(projectObject){
-  const projectContainer = document.createElement("div");
-  projectContainer.className = "project";
-  projectContainer.dataset.projectTitle = projectObject.title;
-
-  const buttonsContainer = document.createElement("div");
-  
-  const addBtn = document.createElement("button");
-  addBtn.innerHTML = '<i class="bi bi-plus-lg"></i>';
-  addBtn.onclick = addTodoToProjectHandler;
-  addBtn.className = "project-btn btn";
-
-  const editBtn = document.createElement("button");
-  editBtn.innerHTML = '<i class="bi bi-pencil"></i>';
-  editBtn.onclick = editProjectHandler;
-  editBtn.className = "project-btn btn";
-
-  const removeBtn = document.createElement("button");
-  removeBtn.innerHTML = '<i class="bi bi-trash"></i>';
-  removeBtn.onclick = removeProjectHandler;
-  removeBtn.className = "project-btn btn";
-
-  buttonsContainer.append(addBtn,editBtn,removeBtn);
-  buttonsContainer.style.cssText = 
-    "display: flex; justify-content: flex-end;";
-
-  const projectTitleEl = document.createElement("h2");
-  projectTitleEl.textContent = projectObject.title;
-
-  const projectDescriptionEl = document.createElement("p");
-  projectDescriptionEl.textContent = projectObject.description;
-
-  const projectTodosEl = document.createElement("div");
-  projectObject.todos.forEach(todo => {
-    const todoEl = createTodoElement(todo);
-    projectTodosEl.appendChild(todoEl)
-  });
-
-  projectContainer.append(
-    buttonsContainer,
-    projectTitleEl,
-    projectDescriptionEl,
-    projectTodosEl
-  );
-
-  return projectContainer;
-}
-
-function createTodoElement(todoObject){
-  const todoContainer = document.createElement("div");
-  todoContainer.className = "todo";
-
-  const todoTitleEl = document.createElement("h3");
-  todoTitleEl.textContent = todoObject.title;
-  
-  const todoDescriptionEl = document.createElement("p");
-  todoDescriptionEl.textContent = todoObject.description;
-
-  const todoStatusEl = document.createElement("p");
-  todoStatusEl.textContent = "Status: ";
-  todoStatusEl.textContent += 
-    (todoObject.isFinished ? "Finished" : "In progress");
-
-  const todoDueDateEl = document.createElement("p");
-  todoDueDateEl.textContent = "Due: " + todoObject.dueDate;
-
-  let todoPriorityLevel = "Priority: ";
-  if(todoObject.priority == 1){
-    todoPriorityLevel += "High";
-  }
-  else if(todoObject.priority == 2){
-    todoPriorityLevel += "Medium";
-  }
-  else if(todoObject.priority == 3){
-    todoPriorityLevel += "Low";
-  }
-  const todoPriorityEl = document.createElement("p");
-  todoPriorityEl.textContent = todoPriorityLevel;
-
-  const buttonsContainer = document.createElement("div");
-  buttonsContainer.style.cssText = 
-    "display: flex; justify-content: flex-end;"
-
-  const editBtn = document.createElement("button");
-  editBtn.className = "btn";
-  editBtn.innerHTML = '<i class="bi bi-pencil"></i>';
-  editBtn.onclick = editTodoHandler;
-
-  const removeBtn = document.createElement("button");
-  removeBtn.className = "btn";
-  removeBtn.innerHTML = '<i class="bi bi-trash"></i>';
-  removeBtn.onclick = removeTodoHandler;
-
-  const changeStatusBtn = document.createElement("button");
-  changeStatusBtn.dataset.todoTitle = todoObject.title;
-  changeStatusBtn.className = "btn";
-  changeStatusBtn.innerHTML = '<i class="bi bi-check-lg"></i>';
-  changeStatusBtn.onclick = changeStatusHandler;
-
-  buttonsContainer.append(changeStatusBtn,editBtn,removeBtn);
-
-  todoContainer.append(
-    todoTitleEl,
-    todoDescriptionEl,
-    todoStatusEl,
-    todoDueDateEl,
-    todoPriorityEl,
-    buttonsContainer
-  );
-
-  return todoContainer;
-}
-
-function renderAllProjects(e){
-  removeActiveClasses(e);
-  addActiveClass(e);
+function allProjectsHandler(e){
   display.innerHTML = "";
-  renderAll(getDATA());
+  setActiveTab(e);
+  renderProjects(getDATA().projects,display);
 }
 
-function renderTodayTodos(e){
-  removeActiveClasses(e);
-  addActiveClass(e);
+function addProjectHandler(e){
   display.innerHTML = "";
+  setActiveTab(e);
 }
 
-function renderWeekTodos(e){
-  removeActiveClasses(e);
-  addActiveClass(e);
+function todoyTodosHandler(e){
   display.innerHTML = "";
+  setActiveTab(e);
 }
 
-function renderMonthTodos(e){
-  removeActiveClasses(e);
-  addActiveClass(e);
-  display.innerHTML = "";
-}
+// todo item handlers
 
-function renderAddProject(e){
-  removeActiveClasses(e);
-  addActiveClass(e);
-  display.innerHTML = "";
-}
-
-function renderAll(DATA){
-  display.innerHTML = "";
-  DATA.projects.forEach(project => {
-    const projectEl = createProjectElement(project);
-    display.appendChild(projectEl);
-  });
-}
-
-function removeTodoHandler(){
-  console.log("removed todo");
-}
-
-function editTodoHandler(){
-  console.log("edited todo");
-}
-
-function changeStatusHandler(e){
-  const DATA = getDATA();
+function changeTodoStatusHandler(event){
   const projectTitle = 
-    e.target
-    .parentElement
-    .parentElement
-    .parentElement
-    .parentElement
-    .parentElement
-    .dataset.projectTitle;
+    event.currentTarget.dataset.projectTitle;
+
   const todoTitle = 
-    e.target.parentElement.dataset.todoTitle;
-  const targetTodo = getTodo(DATA,todoTitle);
-  const newDATA = updateTodo(targetTodo.title,targetTodo.description,!(targetTodo.isFinished),"2024-05-12",targetTodo.priority,DATA,projectTitle,targetTodo.title);
-  setDATA(newDATA);
-  renderAll(getDATA());
+    event.currentTarget.dataset.todoTitle;
+
+  let DATA = getDATA();
+  setDATA(changeTodoStatus(DATA,projectTitle,todoTitle));
+  renderProjects(getDATA().projects,display);
 }
 
-function editProjectHandler(){
-  console.log("edited project");
-}
+// render all projects
 
-function removeProjectHandler(){
-  console.log("removed project");
-}
-
-function addTodoToProjectHandler(){
-  console.log("added a todo to project");
-}
-
-function getTodo(DATA,todoTitle){
-  let targetTodo = null;
-  DATA.projects.forEach(project => {
-    project.todos.forEach(todo => {
-      if(todo.title == todoTitle){
-        targetTodo = todo;
-      }
-    });
+function renderProjects(projects,target){
+  target.innerHTML = "";
+  projects.forEach(project => {
+    target.appendChild(
+      createProjectElement(
+        project,
+        ()=>console.log("add a project"),
+        ()=>console.log("Edit a project"),
+        ()=>console.log("Remove a project"),
+        changeTodoStatusHandler,
+        ()=>console.log("Edit todo"),
+        ()=>console.log("Remove a todo")
+      )
+    );
   });
-  return targetTodo;
 }

@@ -63,17 +63,52 @@ function updateTodo(
   return addTodo(newDATA,projectTitle,newTodo); 
 }
 
-function getTodayTodos(DATA,date){
-  const todayTodos = [];
+function getAllTodos(DATA){
+  const todos = [];
+
   DATA.projects.forEach(project => {
     project.todos.forEach(todo => {
-      if(todo.dueDate == date){
-        todayTodos.push(todo);
-      }
-    });
+      todos.push(todo);
+    }); 
   });
 
-  return todayTodos;
+  return todos;
+}
+
+function getTargetDateTodos(DATA,targetDate){
+  const allTodos = getAllTodos(DATA);
+
+  return allTodos
+    .filter(todo => todo.dueDate == targetDate);
+}
+
+function changeTodoStatus(DATA,projectTitle,todoTitle){
+  DATA.projects.forEach(project => {
+    if(project.title == projectTitle){
+      project.todos.forEach(todo => {
+        if(todo.title == todoTitle){
+          todo.isFinished = !todo.isFinished;
+        }
+      });
+    }
+  });
+  return DATA;
+}
+
+function getTodo(DATA,projectTitle,todoTitle){
+  let targetTodo = null;
+
+  DATA.projects.forEach(project => {
+    if(project.title == projectTitle){
+      project.todos.forEach(todo => {
+        if(todo.title == todoTitle){
+          targetTodo = todo;
+        }
+      });
+    }
+  });
+
+  return targetTodo;
 }
 
 export {
@@ -81,5 +116,8 @@ export {
   addTodo,
   removeTodo,
   updateTodo,
-  getTodayTodos
+  getAllTodos,
+  getTargetDateTodos,
+  changeTodoStatus,
+  getTodo
 }
