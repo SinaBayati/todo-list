@@ -109,7 +109,7 @@ function createTodoElement(todoObject,projectObject,statusHandler,editHandler,re
   return todoContainer;
 }
 
-function createProjectElement(projectObject,projectAddTodoHandler,projectEditHandler,projectRemoveHandler,todoStatusHandler,todoEditHandler,todoRemoveHandler){
+function createProjectElement(projectObject,projectAddTodoHandler,projectRemoveHandler,todoStatusHandler,todoEditHandler,todoRemoveHandler){
   const projectContainer = document.createElement("div");
   projectContainer.classList.add("project");
 
@@ -118,13 +118,10 @@ function createProjectElement(projectObject,projectAddTodoHandler,projectEditHan
   const addBtn = createProjectBtn(projectObject.title,'<i class="bi bi-plus-lg"></i>')
   addBtn.onclick = projectAddTodoHandler;
 
-  const editBtn = createProjectBtn(projectObject.title,'<i class="bi bi-pencil"></i>');
-  editBtn.onclick = projectEditHandler;
-
   const removeBtn = createProjectBtn(projectObject.title,'<i class="bi bi-trash"></i>');
   removeBtn.onclick = projectRemoveHandler;
 
-  buttonsContainer.append(addBtn,editBtn,removeBtn);
+  buttonsContainer.append(addBtn,removeBtn);
   buttonsContainer.style.cssText = 
     "display: flex; justify-content: flex-end;";
 
@@ -155,7 +152,7 @@ function setActiveTab(event){
   event.target.classList.add("active");
 }
 
-function createTodoModal(submitHandler){
+function createTodoModal(){
   const todoModal = document.createElement("div");
   todoModal.id = "todo-modal";
 
@@ -170,12 +167,13 @@ function createTodoModal(submitHandler){
       <textarea id="todo-description" cols="30" rows="5"></textarea>
       <label for="todo-priority">Todo Priority:</label>
       <select id="todo-priority">
+        <option value="3" selected>Select priority</option>
         <option value="1">High</option>
         <option value="2">Medium</option>
         <option value="3">Low</option>
       </select>
       <label for="todo-due-date">Todo due date:</label>
-      <input type="date" id="todo-due-date">
+      <input type="date" value="2024-05-12" id="todo-due-date">
       <button id="todo-submit" type="submit">Submit</button>
     </fieldset>
   </form>

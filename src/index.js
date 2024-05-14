@@ -49,13 +49,11 @@ setInitialData();
 
 const projectsBtn = document.querySelector("#projects-btn");
 const addProjectBtn = document.querySelector("#projects-add-btn");
-const todayTodosBtn = document.querySelector("#today-todos");
 const display = document.querySelector("#display");
 const overlay = document.querySelector("#overlay");
 
 projectsBtn.addEventListener("click",allProjectsHandler);
 addProjectBtn.addEventListener("click",addProjectHandler);
-todayTodosBtn.addEventListener("click",todoyTodosHandler);
 
 let currentProjectTitle = "Default project title";
 
@@ -70,11 +68,21 @@ function allProjectsHandler(e){
 function addProjectHandler(e){
   display.innerHTML = "";
   setActiveTab(e);
-}
-
-function todoyTodosHandler(e){
-  display.innerHTML = "";
-  setActiveTab(e);
+  display.appendChild(createProjectModal());
+  document.querySelector("#project-modal")
+    .querySelector("form")
+    .addEventListener("submit",function(e){
+      e.preventDefault();
+      const newProjectTitle = e.currentTarget.parentElement.querySelector("#project-title").value;
+      const newProjectDescription = e.currentTarget.parentElement.querySelector("#project-description").value;
+      display.innerHTML = "";
+      display.appendChild(createProjectModal());
+      const newDATA = addProject(
+        getDATA(),
+        createProject(newProjectTitle,newProjectDescription)
+      );
+      setDATA(newDATA);
+  });
 }
 
 // todo item handlers
@@ -109,8 +117,8 @@ function todoSubmitHandler(e){
   const newTodoDescription = e.target.parentElement
   .querySelector("#todo-description").value;
 
-  const newTodoPriority = e.target.parentElement
-  .querySelector("#todo-priority").value;
+  const newTodoPriority = Number(e.target.parentElement
+  .querySelector("#todo-priority").value);
 
   const newTodoDueDate = e.target.parentElement
   .querySelector("#todo-due-date").value;
@@ -137,7 +145,6 @@ function renderProjects(projects,target){
       createProjectElement(
         project,
         addTodoToProjectHandler,
-        ()=>console.log("Edit a project"),
         removeProjectHandler,
         changeTodoStatusHandler,
         ()=>console.log("Edit todo"),
@@ -148,6 +155,7 @@ function renderProjects(projects,target){
 }
 
 function renderModal(modal,overlay){
+  overlay.innerHTML = "";
   overlay.appendChild(modal);
   overlay.classList.add("active");
 }
