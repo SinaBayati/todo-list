@@ -155,9 +155,39 @@ function setActiveTab(event){
   event.target.classList.add("active");
 }
 
+function createTodoModal(){
+  const todoModal = document.createElement("div");
+  todoModal.id = "todo-modal";
+
+  todoModal.insertAdjacentHTML("afterbegin",
+  `
+  <form action="#">
+    <legend>Todo Item</legend>
+    <fieldset>
+      <label for="todo-title">Todo Title:</label>
+      <input id="todo-title" type="text">
+      <label for="todo-description">Todo Description:</label>
+      <textarea id="todo-description" cols="30" rows="5"></textarea>
+      <label for="todo-priority">Todo Priority:</label>
+      <select id="todo-priority">
+        <option value="1">High</option>
+        <option value="2">Medium</option>
+        <option value="3">Low</option>
+      </select>
+      <label for="todo-due-date">Todo due date:</label>
+      <input type="date" id="todo-due-date">
+      <button id="todo-submit" type="submit">Submit</button>
+    </fieldset>
+  </form>
+  `);
+
+  return todoModal;
+}
+
 export {
   removeActiveClasses,
   createProjectElement,
   createTodoElement,
   setActiveTab,
+  createTodoModal
 }

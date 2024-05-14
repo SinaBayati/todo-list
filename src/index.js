@@ -27,6 +27,7 @@ import {
   createProjectElement,
   createTodoElement,
   setActiveTab,
+  createTodoModal,
 } from "./DOM.js";
 
 function setDATA(DATA){
