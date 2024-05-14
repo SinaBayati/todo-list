@@ -184,10 +184,32 @@ function createTodoModal(){
   return todoModal;
 }
 
+function createProjectModal(){
+  const projectModal = document.createElement("div");
+  projectModal.id = "project-modal";
+
+  projectModal.insertAdjacentHTML("afterbegin",
+  `
+  <form action="#">
+    <legend>Project</legend>
+    <fieldset>
+      <label for="project-title">Project Title:</label>
+      <input type="text" id="project-title">
+      <label for="project-description">Project Description:</label>
+      <textarea id="project-description" rows="5"></textarea>
+      <button id="project-submit" type="submit">Submit</button>
+    </fieldset>
+  </form>
+  `);
+
+  return projectModal;
+}
+
 export {
   removeActiveClasses,
   createProjectElement,
   createTodoElement,
   setActiveTab,
-  createTodoModal
+  createTodoModal,
+  createProjectModal
 }
